@@ -17,6 +17,14 @@ flast-rest-api
 + Werkzeug         2.0.2
 + wheel            0.36.2
 
+## В config.py лежал ключ и путь до папки с проектом:
+```
+import os
+class Configuration(object):
+    file_path = os.path.abspath(os.getcwd()) + "/todo.db"
+    SECRET_KEY = '...'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + file_path
+```
 ## Работа с пользователями
 ### Авторизация пользователя
 В случае неверного токена авторизованного пользователя
