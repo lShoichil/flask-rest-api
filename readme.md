@@ -17,6 +17,12 @@ flast-rest-api
 + Werkzeug         2.0.2
 + wheel            0.36.2
 
+## Предводирельно необходимо создать db в папке с проектом с помощью следующих команд:
++ python3
++ from app import db
++ db.create_all()
++ exit().
+
 ## В config.py лежал ключ и путь до папки с проектом:
 ```
 import os
