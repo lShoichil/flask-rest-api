@@ -55,7 +55,7 @@ class Configuration(object):
 ## Работа с задачами для todo листа
 ### Создание задачи
 Определение пользователя, создающего задачу происходит по токену
-![image](https://user-images.githubusercontent.com/78679833/149454053-249ff0b7-3867-4934-aa05-823df6fbc941.png)
+![image](https://user-images.githubusercontent.com/78679833/149639171-371054d8-0d42-495d-88fe-27e63ba24f4b.png)
 ### Вывод всех задач
 Вывод всех задач для пользователя “Admin” по его токену
 ![image](https://user-images.githubusercontent.com/78679833/149454083-58d1a930-6ed1-45cd-a4e8-c5f0edd4d96f.png)
