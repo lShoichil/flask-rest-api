@@ -51,6 +51,11 @@ def token_required(f):
     return decorated
 
 
+@app.route('/')
+def hello():
+    return "<h1>Hello There!</h1>"
+
+
 @app.route('/user', methods=['GET'])
 @token_required
 def get_all_users(current_user):
