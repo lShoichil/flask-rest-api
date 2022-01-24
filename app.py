@@ -3,9 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from config import Configuration
+from dotenv import load_dotenv
 import uuid
 import jwt
 import datetime
+import os
 
 app = Flask(__name__)
 
@@ -40,8 +42,10 @@ def token_required(f):
             return jsonify({'message': "Token is missing!"}), 401
 
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-            current_user = User.query.filter_by(public_id=data['public_id']).first()
+            data = jwt.decode(token, app.config['SECRET_KEY'],
+                              algorithms=["HS256"])
+            current_user = \
+                User.query.filter_by(public_id=data['public_id']).first()
 
         except:
             return jsonify({'message': "Token is invalid!"}), 401
@@ -49,6 +53,17 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
 
     return decorated
+
+
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+
+@app.route("/health/", methods=["GET"])
+def health():
+    return jsonify({
+        "env": os.environ['SERVER_ENV']
+    })
 
 
 @app.route('/')
@@ -101,7 +116,8 @@ def create_user(current_user):
 
     hashed_password = generate_password_hash(data['password'], method='sha256')
 
-    new_user = User(public_id=str(uuid.uuid4()), name=data['name'], password=hashed_password, admin=False)
+    new_user = User(public_id=str(uuid.uuid4()), name=data['name'],
+                    password=hashed_password, admin=False)
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'message': 'New user created!'})
@@ -139,20 +155,30 @@ def login():
     auth = request.authorization
 
     if not auth or not auth.username or not auth.password:
-        return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
+        return make_response('Could not verify', 401,
+                             {
+                                 'WWW-Authenticate': 'Basic realm='
+                                                     '"Login required!"'
+                             })
 
     user = User.query.filter_by(name=auth.username).first()
 
     if not user:
-        return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
+        return make_response('Could not verify', 401,
+                             {
+                                 'WWW-Authenticate': 'Basic realm='
+                                                     '"Login required!"'
+                             })
 
     if check_password_hash(user.password, auth.password):
         token = jwt.encode(
-            {'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)},
+            {'public_id': user.public_id,
+             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)},
             app.config['SECRET_KEY'], algorithm="HS256")
         return jsonify({'token': token})
 
-    return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
+    return make_response('Could not verify', 401,
+                         {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
 
 @app.route('/todo', methods=['GET'])
