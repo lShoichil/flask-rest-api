@@ -15,7 +15,7 @@ app.config.from_object(Configuration)
 
 db = SQLAlchemy(app)
 
-#test pre-receive_4
+#test pre-receive_5
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50))
