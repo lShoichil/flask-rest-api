@@ -3,4 +3,6 @@ venv
 .env
 config.py
 todo.db
-__pycahe__
+__pycache__
+devenv
+prodenv
