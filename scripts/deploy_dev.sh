@@ -1,3 +1,4 @@
+cd ..
 source devenv/bin/activate
 pip freeze > requirements.txt
 git add .

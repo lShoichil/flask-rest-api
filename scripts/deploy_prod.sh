@@ -1,3 +1,4 @@
+cd ..
 source prodenv/bin/activate
 pip freeze > requirements.txt
 git add .
