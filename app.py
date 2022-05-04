@@ -256,4 +256,4 @@ def delete_todo(current_user, todo_id):
 
 if __name__ == '__main__':
 #    db.create_all()
-    app.run()
+    app.run(debug=True)
