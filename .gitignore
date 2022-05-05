@@ -1,9 +1,9 @@
 .idea
 venv
 env
-.env
-config.py
-todo.db
+web/.env
+web/config.py
+web/todo.db
 __pycache__
 devenv
 prodenv
