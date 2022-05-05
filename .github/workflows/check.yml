@@ -10,8 +10,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: actions-pytest
-        uses: xoviat/actions-pytest@0.1-alpha2
+      - name: Run Super-Linter
+        uses: github/super-linter@v3
         env:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
