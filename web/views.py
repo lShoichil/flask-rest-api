@@ -81,8 +81,7 @@ def get_one_user(current_user, public_id):
 
 
 @app.route('/user', methods=['POST'])
-@token_required
-def create_user(current_user):
+def create_user():
     data = request.get_json()
 
     hashed_password = generate_password_hash(data['password'], method='sha256')
@@ -183,7 +182,7 @@ def get_one_todo(current_user, todo_id):
 @token_required
 def create_todo(current_user):
     data = request.form['text']
-
+    print ('aboba')
     new_todo = Todo(text=data, complete=False, user_id=current_user.id)
     db.session.add(new_todo)
     db.session.commit()

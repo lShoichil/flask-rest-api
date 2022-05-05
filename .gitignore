@@ -3,7 +3,7 @@ venv
 env
 web/.env
 web/config.py
-web/todo.db
+todo.db
 __pycache__
 devenv
 prodenv
