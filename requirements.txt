@@ -11,3 +11,6 @@ python-dotenv==0.20.0
 SQLAlchemy==1.4.36
 Werkzeug==2.1.2
 zipp==3.8.0
+pip~=22.0.4
+setuptools~=58.1.0
+db~=0.1.1
