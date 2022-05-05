@@ -15,7 +15,7 @@ app.config.from_object(Configuration)
 
 db = SQLAlchemy(app)
 
-#test1 receive_1
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50))
@@ -255,5 +255,5 @@ def delete_todo(current_user, todo_id):
 
 
 if __name__ == '__main__':
-#    db.create_all()
+    # db.create_all()
     app.run(debug=True)
