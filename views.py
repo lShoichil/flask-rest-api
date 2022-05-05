@@ -2,15 +2,18 @@ import datetime
 import os
 import uuid
 from functools import wraps
-
 import jwt
 from dotenv import load_dotenv
 from flask import request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 
-import app
-import db
-from models import User, Todo
+from app import app
+from models import *
+
+
+@app.route('/')
+def hello():
+    return "<h1>Hello There!</h1>"
 
 
 def token_required(f):
@@ -28,7 +31,6 @@ def token_required(f):
                               algorithms=["HS256"])
             current_user = \
                 User.query.filter_by(public_id=data['public_id']).first()
-
         except:
             return jsonify({'message': "Token is invalid!"}), 401
 
@@ -48,11 +50,6 @@ def health():
     })
 
 
-@app.route('/')
-def hello():
-    return "<h1>Hello There!</h1>"
-
-
 @app.route('/user', methods=['GET'])
 @token_required
 def get_all_users(current_user):
@@ -64,11 +61,7 @@ def get_all_users(current_user):
     output = []
 
     for user in users:
-        user_data = {}
-        user_data['public_id'] = user.public_id
-        user_data['name'] = user.name
-        user_data['password'] = user.password
-        user_data['admin'] = user.admin
+        user_data = {'public_id': user.public_id, 'name': user.name, 'password': user.password, 'admin': user.admin}
         output.append(user_data)
 
     return jsonify({'users': output})
@@ -76,24 +69,20 @@ def get_all_users(current_user):
 
 @app.route('/user/<public_id>', methods=['GET'])
 @token_required
-def get_one_user(current_user, public_id):
+def get_one_user(public_id):
     user = User.query.filter_by(public_id=public_id).first()
 
     if not user:
         return jsonify({'message': 'No user found!'})
 
-    user_data = {}
-    user_data['public_id'] = user.public_id
-    user_data['name'] = user.name
-    user_data['password'] = user.password
-    user_data['admin'] = user.admin
+    user_data = {'public_id': user.public_id, 'name': user.name, 'password': user.password, 'admin': user.admin}
 
     return jsonify({'user': user_data})
 
 
 @app.route('/user', methods=['POST'])
 @token_required
-def create_user(current_user):
+def create_user():
     data = request.get_json()
 
     hashed_password = generate_password_hash(data['password'], method='sha256')
@@ -107,7 +96,7 @@ def create_user(current_user):
 
 @app.route('/user/<public_id>', methods=['PUT'])
 @token_required
-def promote_user(current_user, public_id):
+def promote_user(public_id):
     user = User.query.filter_by(public_id=public_id).first()
 
     if not user:
@@ -121,7 +110,7 @@ def promote_user(current_user, public_id):
 
 @app.route('/user/<public_id>', methods=['DELETE'])
 @token_required
-def delete_user(current_user, public_id):
+def delete_user(public_id):
     user = User.query.filter_by(public_id=public_id).first()
 
     if not user:
@@ -171,10 +160,7 @@ def get_all_todos(current_user):
     output = []
 
     for todo in todos:
-        todo_data = {}
-        todo_data['id'] = todo.id
-        todo_data['text'] = todo.text
-        todo_data['complete'] = todo.complete
+        todo_data = {'id': todo.id, 'text': todo.text, 'complete': todo.complete}
         output.append(todo_data)
 
     return jsonify({'todos': output})
@@ -188,10 +174,7 @@ def get_one_todo(current_user, todo_id):
     if not todo:
         return jsonify({'message': 'No todo found'})
 
-    todo_data = {}
-    todo_data['id'] = todo.id
-    todo_data['text'] = todo.text
-    todo_data['complete'] = todo.complete
+    todo_data = {'id': todo.id, 'text': todo.text, 'complete': todo.complete}
 
     return jsonify(todo_data)
 
