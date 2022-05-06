@@ -5,7 +5,11 @@ from flask_login import (
     login_user,
     logout_user,
 )
-from ToDo import bcrypt, db
+from flask_mail import Message
+from itsdangerous import SignatureExpired
+
+from ToDo import bcrypt, db, mail
+from ToDo.config import s
 from ToDo.models import User, Todo, LoginForm, RegisterForm
 
 main_routes = Blueprint("main", __name__, template_folder="templates")
@@ -87,3 +91,31 @@ def delete(todo_id):
     db.session.delete(todo)
     db.session.commit()
     return redirect(url_for("main.go_todo"))
+
+
+@main_routes.route('/confirm_email', methods=['GET', 'POST'])
+def index():
+    if request.method == 'GET':
+        return '<form action="/confirm_email" method="POST"><input name="email"><input type="submit"></form>'
+
+    email = request.form['email']
+    token = s.dumps(email, salt='email-confirm')
+
+    msg = Message('Confirm Email', sender='teamsuppormail@yandex.ru', recipients=[email])
+
+    link = url_for('main.confirm_email', token=token, _external=True)
+
+    msg.body = 'Your link is {}'.format(link)
+
+    mail.send(msg)
+
+    return '<h1>The email you entered is {}. The token is {}</h1>'.format(email, token)
+
+
+@main_routes.route('/confirm_email/<token>')
+def confirm_email(token):
+    try:
+        email = s.loads(token, salt='email-confirm', max_age=3600)
+    except SignatureExpired:
+        return '<h1>The token is expired!</h1>'
+    return '<h1>The token works!</h1>'
