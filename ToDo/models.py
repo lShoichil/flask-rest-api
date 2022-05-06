@@ -14,7 +14,8 @@ def load_user(user_id):
 class User(db.Model, UserMixin):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
+    username = db.Column(db.String(80), nullable=False, unique=True)
+    email = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
 
 
@@ -30,33 +31,39 @@ class Todo(db.Model):
 
 class RegisterForm(FlaskForm):
     username = StringField(
-        validators=[InputRequired(), Length(min=4, max=20)],
+        validators=[InputRequired(), Length(min=4, max=80)],
         render_kw={"placeholder": "Username"},
     )
 
+    email = StringField(
+        validators=[InputRequired(), Length(min=5, max=80)],
+        render_kw={"placeholder": "email"},
+    )
+
     password = PasswordField(
-        validators=[InputRequired(), Length(min=8, max=20)],
+        validators=[InputRequired(), Length(min=8, max=80)],
         render_kw={"placeholder": "Password"},
     )
 
     submit = SubmitField("Register")
 
-    def validate_username(self, username):
+    def validate_check(self, username, email):
         existing_user_username = User.query.filter_by(username=username.data).first()
-        if existing_user_username:
+        existing_user_email = User.query.filter_by(email=email.data).first()
+        if existing_user_username or existing_user_email:
             raise ValidationError(
-                "That username already exists. Please choose a different one."
+                "That username or email already exists. Please choose a different one."
             )
 
 
 class LoginForm(FlaskForm):
-    username = StringField(
-        validators=[InputRequired(), Length(min=4, max=20)],
-        render_kw={"placeholder": "Username"},
+    email = StringField(
+        validators=[InputRequired(), Length(min=5, max=80)],
+        render_kw={"placeholder": "email"},
     )
 
     password = PasswordField(
-        validators=[InputRequired(), Length(min=8, max=20)],
+        validators=[InputRequired(), Length(min=8, max=80)],
         render_kw={"placeholder": "Password"},
     )
 
