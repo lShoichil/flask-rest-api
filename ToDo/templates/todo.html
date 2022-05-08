@@ -16,8 +16,12 @@
 
     <form class="ui form" action="/todo/add" method="post">
         <div class="field">
-            <label>Todo Title</label>
             <a href="{{ url_for('main.logout') }}">Press here to logout</a>
+            <br>
+            <a href="{{ url_for('main.go_admin_page') }}">Press here to admin page</a>
+{#            <br>#}
+{#            <a href="{{ url_for('main.prechange_password') }}">Press here to change your password</a>#}
+            <label>Todo Title</label>
             <input type="text" name="title" placeholder="Enter Todo..."><br>
         </div>
         <button class="ui blue button" type="submit">Add</button>

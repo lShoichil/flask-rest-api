@@ -16,7 +16,8 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False, unique=True)
     email = db.Column(db.String(80), nullable=False, unique=True)
-    password = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(80), nullable=True)
+    admin = db.Column(db.Integer, nullable=False)
 
 
 class Todo(db.Model):
@@ -68,3 +69,26 @@ class LoginForm(FlaskForm):
     )
 
     submit = SubmitField("Login")
+
+
+class AdminForm(FlaskForm):
+    email = StringField(
+        validators=[InputRequired(), Length(min=5, max=80)],
+        render_kw={"placeholder": "email"},
+    )
+
+    password = PasswordField(
+        validators=[InputRequired(), Length(min=8, max=80)],
+        render_kw={"placeholder": "Password"},
+    )
+
+    submit = SubmitField("Update to admin")
+
+
+class ChangePasswordForm(FlaskForm):
+    password = PasswordField(
+        validators=[InputRequired(), Length(min=8, max=80)],
+        render_kw={"placeholder": "Password"},
+    )
+
+    submit = SubmitField("Change your password")
